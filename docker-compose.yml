@@ -1,0 +1,40 @@
+# Use root/example as user/password credentials
+version: "3.1"
+
+services:
+  # Mongo db database
+  mongo:
+    image: mongo:4
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  # User sign-ups, Message and invoice creation jobs
+  fake-data:
+    image: "node:14"
+    depends_on:
+      - "mongo"
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    environment:
+      MONGODB_URL: mongodb://root:example@mongo:27017/secondNature?authSource=admin&ssl=false
+      TIME_BETWEEN_CRON_JOBS: 20
+      COMPANY_START_DATE: "2020-06-01"
+      REAL_TIME_SECONDS_IN_A_DAY: 20
+      USER_SIGN_UPS_PER_SCALED_DAY: 10
+
+    command: bash -c "npm run build && npm run start"
+
+  # Lightweight Mongo db Management UI
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
