@@ -19,9 +19,11 @@ class Config:
 
     # Database Credentials
     DATABASE = 'secondNature'
-    COLLECTIONS = ['groups', 'messages', 'users']
-    USERNAME = getenv('MONGO_ACCOUNT') or 'root'
-    PASSWORD = getenv('MONGO_PASSWORD') or 'example'
+    COLLECTION_GROUPS = 'groups'
+    COLLECTION_MESSAGES = 'messages'
+    COLLECTION_USERS = 'users'
+    USERNAME = getenv('MONGO_ACCOUNT') or 'root'        # The credentials should be stored in a vault
+    PASSWORD = getenv('MONGO_PASSWORD') or 'example'    # Left here for now, but would most likely move to Google Secret Manager
     PORT = int(getenv('MONGO_PORT') or 21017)
 
     # Airflow Configuration Variables
@@ -45,8 +47,17 @@ class Config:
                                                                     # copies, if they don't have this key.
 
     # Operation Variables
-    COLLECTION_PARTITIONING = {
-        # 'groups': '',
-        # 'messages': '',
-        'users': 'signUpDate'
+    COLLECTIONS = {
+        # 'groups': {
+        #     'partition_field': 'startDate',
+        #     'gcs_location': 'groups'
+        # },
+        # 'messages': {
+        #     'partition_field': '',
+        #     'gcs_location': 'messages'
+        # },
+        'users': {
+            'partition_field': 'subscriptions.invoices.info.date',
+            'gcs_location': 'users'
+        }
     }

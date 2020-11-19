@@ -5,14 +5,6 @@ Author: Vitali Lupusor
 Description: TODO
 '''
 
-# Import external modules
-import os
-
 # Import internal modules
-from .support_features import extract_table
+from .mongodb import users_extract_logic
 from .gcp import upload
-
-def main():
-    '''TODO
-    '''
-    return 'client'

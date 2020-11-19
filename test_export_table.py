@@ -13,30 +13,12 @@ def test_extract_table():
 
     return (): TODO
     '''
-    # Import external modules
-    from random import choice
-
     # Import internal modules
-    from config import Config
-    from pipelines import extract_table
+    from pipelines import users_extract_logic
 
-    # Instantiate imported modules
-    config = Config()
-
-    # Select a random collection
-    collection = choice(
-        list(
-            config.COLLECTION_PARTITIONING.keys()
-        )
-    )
-    partition_field = config.COLLECTION_PARTITIONING[collection]
-
-    result = extract_table(
-        database=config.DATABASE,
-        collection=collection,
-        partition_field=partition_field,
-        cut_off_date='2020-06-25',              # This date can be changed or omitted altogether
-        start_date='2020-06-24'                 # This date can be changed or omitted altogether
+    result = users_extract_logic(
+        cut_off_date='2020-06-03',              # This date can be changed or omitted altogether
+        start_date='2020-06-02'                 # This date can be changed or omitted altogether
     )
 
     return result
