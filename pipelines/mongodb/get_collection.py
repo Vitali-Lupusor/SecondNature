@@ -2,25 +2,29 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Connect to a MongoDB database and get the collection.
+        This is a decorator function that will connect to the database, 
+        get the collection object and apply the appropriate logic (specified 
+        in a separate function) in order to extract data.
 '''
 
 def get_collection(database_name, collection_name):
-    '''TODO
+    '''Take in the file extraction logic and apply it on the collection object 
+    of the specified database.
 
     Arguments:
-        database_name (): TODO
-        collection_name (): TODO
+        database_name (str): The name of the database to which to connect.
+        collection_name (str): The name of the collection that will be queried.
 
-    return (str): TODO
+    return (function): The decorator function.
     '''
     def decorator_get_collection(funct):
-        '''TODO
+        '''Passes the decorated function to globals.
 
         Arguments:
-            funct (function): TODO
+            funct (function): The function that will be decorated.
 
-        return (function): TODO
+        return (function): A wrapper function.
         '''
         # Import external modules
         _functools = __import__('functools', fromlist=['wraps'])
@@ -28,13 +32,14 @@ def get_collection(database_name, collection_name):
 
         @wraps(funct)
         def wrapper_get_collection(*args, **kwargs):
-            '''TODO
+            '''Wrapper function.
+            Wraps some logic around the decorated function.
 
             Arguments:
-                *args (tuple): TODO
-                **kwargs (dict): TODO
+                *args (tuple): Possitional attributes of the decorated function.
+                **kwargs (dict): Key-value attributes of the decorated function.
 
-            return (function): TODO
+            return (str): The full path to the extracted file.
             '''
             # Import external modules
             _datetime = __import__('datetime', fromlist=['datetime', 'timedelta'])
@@ -84,7 +89,7 @@ def get_collection(database_name, collection_name):
                 )
                 raise PyMongoError(message)
 
-            # Extract data from table
+            # Prepare the name and the path of the to-be-extracted file
             tmp_dir = os.getenv('TEMP') or os.getenv('TMP') \
                 or os.getenv('TMPDIR')
             output_name = '_'.join([
@@ -104,21 +109,15 @@ def get_collection(database_name, collection_name):
                 cut_off_date=cut_off_date
             )
 
+            # Extract data from table
             with open(tmp_path, 'w') as file_object:
                 table = list(
                     eval(f'collection.{extraction_logic}')
                 )
-                file_object.write('[')
-                for index, document in enumerate(table):
-                    if index != len(table)-1:
-                        file_object.write(
-                            f'{dumps(document)},'
-                        )
-                    else:
-                        file_object.write(
-                            dumps(document)
-                        )
-                file_object.write(']')
+                for document in table:
+                    file_object.write(
+                        f'{dumps(document)}\n'
+                    )
 
             return tmp_path
 

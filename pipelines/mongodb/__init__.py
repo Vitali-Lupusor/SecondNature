@@ -2,7 +2,7 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: The extraction logic for the "users" collection.
 '''
 
 # Import internal modules
@@ -22,15 +22,23 @@ collection_users = config.COLLECTION_USERS
 def users_extract_logic(
     cut_off_date=None, start_date=None, *args, **kwargs
 ):
-    '''TODO
+    '''Extract the "users" collection.
+    If no attributes are provided, only the partition of the table that 
+    represesnt subset of invoices for the day before execution date will 
+    be extracted, i.e. if run on 2020-11-14, the extract will contain data 
+    for the period between 2020-11-13 00:00:00 and 2020-11-13 23:59:59.
+
+    The time boundaries can be twicked.
 
     Arguments:
-        cut_off_date (): TODO
-        start_date (): TODO
-        *args (tuple): TODO
-        **kwargs (dict): TODO
+        cut_off_date (str, datetime.date): The upper limit of the invoice date 
+                value for the extracted partition.
+        start_date (str, datetime.date): The lower limit of the invoice date 
+                value for the extracted partition.
+        *args (tuple): Tuple containing an array of optional possitional attributes.
+        **kwargs (dict): A dictionary of key-value sets of optional attributes.
 
-    return (): TODO
+    return (str): The logic that will be applied on the pymongo collection object.
     '''
     # MongoDB syntax for the extraction logic
     logic = f'''aggregate([
