@@ -2,16 +2,18 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Date values validation.
 '''
 
 def validate_date(date=None):
-    '''TODO
+    '''Validates the provided values as a date value.
 
     Arguments:
-        date (): TODO
+        date (datetime.date, datetime.dateime, NoneType, str): 
+                The value that should be validated. If none provided,
+                will return today's date with time set to midnight.
 
-    return (): TODO
+    return (datetime.datetime): datetime object from the provided value.
     '''
     # Import external modules
     _datetime = __import__('datetime', fromlist=['datetime'])

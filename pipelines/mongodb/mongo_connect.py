@@ -2,18 +2,19 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Connect to a MongoDB host.
 '''
 
 def mongo_client(host=None, port=27017, **kwargs):
-    '''TODO
+    '''Connection to a MongoDG host and return an authenticate 
+    client (if authentication required).
 
     Arguments:
-        host (): TODO
-        port (): TODO
-        **kwargs (dict): TODO
+        host (str): MongoDB host IP.
+        port (int): Connection port.
+        **kwargs (dict): Optional key-value attributes.
 
-    return (): TODO
+    return (pymongo.MongoClient): Authenticated client.
     '''
     # Import external modules
     _pymongo = __import__('pymongo', fromlist=['MongoClient'])

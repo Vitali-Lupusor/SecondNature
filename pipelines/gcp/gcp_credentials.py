@@ -2,7 +2,8 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Operations on getting the credentials to a Google Cloud 
+        Platform project.
 '''
 
 # Import internal modules
@@ -24,34 +25,48 @@ def get_credentials(
     credentials_path=credentials_path,
     passphrase=passphrase
 ):
-    '''TODO
+    '''Get the credentials to a Google Cloud Project (GCP).
+    You can explicitly provide the path an Fernet encrypted credentials file or 
+    you can use your own GCP instance. In case of the former, you will need to 
+    also provide the name of your project.
 
     Arguments:
-        credentials_path (str): TODO
+        _funct (function, NoneType): If the decorator is called without any arguments, 
+                pass the decorate function down the process. Alternatively, pass down 
+                the line its arguments.
 
-    return () : TODO
+        projtect (str): The name of the GCP project. Defaults to the value given in 
+                the `.config.py` file.
+
+        credentials_path (str): The path to Fernet encrypted credentials. Defaults 
+                to the value given in the `.config.py` file.
+
+    return (function): The decoration function.
     '''
     # Import external modules
     _functools = __import__('functools', fromlist=['wraps'])
     wraps = _functools.wraps
 
     def decorator_get_credentials(function):
-        '''TODO
+        '''The decorator function.
+        Passes the decorated function down the line.
 
         Arguments:
-            function (function): TODO
+            function (function): The function is being decorated.
 
-        return (function): TODO
+        return (function): The wrapper function.
         '''
         @wraps(function)
         def wrapper_get_credentials(*args, **kwargs):
-            '''TODO
+            '''Wrapper function.
+            Here the main activity takes place.
 
             Arguments:
-                *args (list): TODO
-                **kwargs (dict): TODO
+                *args (list): Positional arguments for the decorated function.
+                **kwargs (dict): Key-value arguments for the decorated function.
 
-            return (function): TODO
+            return (google.cloud.${service}.Client): Returns an authenticated 
+                    client for the requested service.
             '''
             # Import external modules
             _os = __import__('os', fromlist=['environ', 'remove'])

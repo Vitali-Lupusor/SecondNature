@@ -2,7 +2,8 @@
 Date: 2020-11-21
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Loads files from Google Cloud Storage directly to a BigQuery table.
+        This function is currently not in use, but is 100% functional.
 '''
 
 def from_gcs_to_bq(gcs_uri, destination, schema=None, mode=None, header_rows=1):
@@ -20,7 +21,7 @@ def from_gcs_to_bq(gcs_uri, destination, schema=None, mode=None, header_rows=1):
                 Defaults to 1. This is being ignored, if the source file format is 
                 anything other than CSV.
 
-    return (): TODO
+    return (NoneType): No return.
     '''
     # Import externla modules
     _cloud = __import__('google.cloud', fromlist=['bigquery'])
@@ -78,4 +79,4 @@ def from_gcs_to_bq(gcs_uri, destination, schema=None, mode=None, header_rows=1):
         job_config=job_config
     )
 
-    return job_load.result()
+    job_load.result()

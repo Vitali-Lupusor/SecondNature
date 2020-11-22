@@ -7,7 +7,12 @@ The application will extract collections from a MongoDB database based on a part
   - upload the flattened file to a BigQuery table.   
  
 The application is set up as a batch job that is scheduled to run daily at 00:00. With the commands listed below, we will trigger the app to backfill the tables starting with 2020-06-01 (COMPANY_START_DATE) and 2020-06-10 as end date.  
-The end date is chosen close to start date in order to reduce the amount of time the app will be running, but it can be increased up to current date, in which case the app will update the BigQuery tables with data that was generated between start date and current date - 1 day (if today is 2020-11-22, cut off date 2020-11-21 23:59:59).
+The end date is chosen close to start date in order to reduce the amount of time the app will be running, but it can be increased up to current date, in which case the app will update the BigQuery tables with data that was generated between start date and current date - 1 day (if today is 2020-11-22, cut off date 2020-11-21 23:59:59).  
+
+There is an actual Google Gloud Platofrm project set up for this application, so when the commands are executed real actions take place.  
+The credentials for the account are encrypted with Fernet cryptography, the key to which is going to be sent in a separate email. No actions to decryp the credentials are required as everything is fully automated. The set credentials will expire on 2020-12-01.  
+
+The application has a centralised configuration file `./config.py` where you can amend the current settings.
 
 ## How to Run
 
@@ -28,17 +33,19 @@ The end date is chosen close to start date in order to reduce the amount of time
     - This will trigger the app.
 12. In order to visualise every step of the application, head over to `localhost:8080`
     - Given than you have run `airflow webserver -p 8080`
+13. (Optional) If you want to see the data from the BigQuery table that you just populated, run `python ./query_bq.py`.
 
 ## Futere improvements
 1. Due to time restrictions I was not able to engineer all the collections (only users is working), so a natural next step is to develop the logic for the rest of them.
-2. Add logs for an easier debugging.
-3. Add more unit tests for the same purpose as above.
-4. Improve the security aspect:
+2. Create a dashboard to visualise insights based on the created pipelines.
+3. Add logs for an easier debugging.
+4. Add more unit tests for the same purpose as above.
+5. Improve the security aspect:
     - Hide sensite information in a vault (example Google Secret Manager)
     - Use a better encryption mechanism (example GnuPG)
     - Use `customer-supplie` encryption key for an elivated security
-5. Set up an SMTP to send email notification on the status if the tasks.
-6. Comment the code in a more explicit manner.
-7. Push the ETL of the extracts to the cloud.
+6. Set up an SMTP to send email notification on the status if the tasks.
+7. Comment the code in a more explicit manner.
+8. Push the ETL of the extracts to the cloud.
     - Create a docker image with a tailored code and set it up on a service like to Google Cloud App Engine or Kubernetes.
     - Make it event driven as opposed to scheduled task.

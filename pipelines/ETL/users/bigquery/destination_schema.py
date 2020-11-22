@@ -8,6 +8,10 @@ Description: The schema of the BigQuery "users" master table.
 def users_destination_schema(SchemaField):
     '''Build BigQuery schema for the "users" feeds.
 
+    The below Nones can be replaced with field descriptions. 
+    This helps with a better understanding of the field for the 
+    person looking at the table and acts as a sort of data dictionary.
+
     Arguemnts:
         SchemaField (google.cloud.bigquery.SchemaField): BigQuery 
                 schema object.

@@ -6,12 +6,15 @@ Description: Pyspark Schema object for the extracted "users" collection.
 '''
 
 def users_source_schema(types):
-    '''TODO
+    '''Build the PySpark schema for the "users" collection feeds as they 
+    come out of MongoDB.
 
     Arguemnts:
-        types (pyspark.sql): TODO
+        types (pyspark.sql.types): PySpark object containing all available 
+                data types.
 
-    return (pyspark.sql.types.StructType): TODO
+    return (pyspark.sql.types.StructType): PySpark schema object for the 
+        "users" collection feeds.
     '''
     schema = types.StructType(
         (

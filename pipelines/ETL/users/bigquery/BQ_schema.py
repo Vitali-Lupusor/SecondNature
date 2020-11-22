@@ -2,16 +2,17 @@
 Date: 2020-11-21
 Author: Vitali Lupusor
 
-Description: TODO
+Description: This is BigQuery schema, if the "users" feed is not flattened.
+        This can be ignored. It was created for experimentation purposes.
 '''
 
 def user_bq_schema(SchemaField):
-    '''TODO
+    '''Build the BigQuery schema for the "users" collection feeds.
 
     Arguments:
-        arg (): TODO
+        SchemaField (google.cloud.bigquery.SchemaField): Google schema object.
 
-    return (): TODO
+    return (list): List of schema object for each column of the "users" table.
     '''
     schema = [
         SchemaField(

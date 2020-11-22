@@ -9,11 +9,13 @@ Description: To spare the installation of additional software
 '''
 
 def decrypt(file_path, passphrase):
-    '''TODO
+    '''Decrypt a Fornet encrypted file.
 
     Arguments:
-        file_path (): TODO
-        passphrase (bytes, str): TODO
+        file_path (str): The pass to the encrypted file.
+
+        passphrase (bytes, str): The passphrase necessary to decrypt 
+                the file.
 
     return (): TODO
     '''

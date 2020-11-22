@@ -2,16 +2,16 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Encode the passphrase.
 '''
 
 def encode_passphrase(passphrase):
-    '''TODO
+    '''Make sure the passphrase is of "bytes" data type.
 
     Arguments:
-        passphrase (str, butes): TODO
+        passphrase (str, butes): Passphrase used to decrypt files.
 
-    return (bytes): TODO
+    return (bytes): UTF-8 encoded string.
     '''
     if isinstance(passphrase, str):
         passphrase = passphrase.encode('utf-8')

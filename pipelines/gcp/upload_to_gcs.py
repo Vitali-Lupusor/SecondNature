@@ -2,25 +2,34 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Upload files from local machine to GCS.
 '''
 
 def upload(source, destination, encryption_key=None, keep=False):
     '''Upload a single file from local machine to a provided GCS 
     destination.
 
+    If "encryption_key" provided, the file will be encypted with a 
+    "customer-supplied" key. Meaning that even people with access to 
+    "rest" bucket won't be able to take copies of the file.
+
+    Cleans up after execution, if "keep" is set to False.
+
     Arguments:
         source (str): The path to the target file.
+
         destination (str): Either provide the FULL GCS path, i.e. 
                 "gs://bucket/prefix/file", or ommit the "gs://bucket/".
                 In the case of a partial path, the bucket name will 
                 default to the one provided in the "./config.py" file.
-        encryption_key (): TODO
+
+        encryption_key (bytes): 32-bit encrytption key.
+
         keep (bool): Flag specifying whether to keep the file after 
                 the upload or delete it. Defaults to False - delete 
                 the file.
 
-    return (NoneType): TODO
+    return (NoneType): No return.
     '''
     # Import external modules
     _os = __import__('os', fromlist=['path', 'remove'])

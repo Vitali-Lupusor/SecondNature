@@ -2,7 +2,7 @@
 Date: 2020-11-14
 Author: Vitali Lupusor
 
-Description: TODO
+Description: Initiate the code the subfolders of the current directory.
 '''
 
 # Import internal modules
