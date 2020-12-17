@@ -83,6 +83,7 @@ task_etl_users_feed = PythonOperator(
     task_id='users_ETL',
     dag=dag,
     depends_on_past=False,
+    wait_for_downstream=True,
     provide_context=False,
     python_callable=users_pyspark_ETL,
     op_kwargs={
