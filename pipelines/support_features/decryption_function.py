@@ -1,24 +1,28 @@
-'''
+"""Decrypt encrypted files.
+
+To spare the installation of additional software as well as
+dealing with private and public keys I have used the Fernet encryption.
+For an elevated security this would be replaced with GnuPG or any alike
+encryption tool.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: To spare the installation of additional software 
-    as well as dealing with private and public keys I have 
-    used the Fernet encryption. For an elevated security this 
-    would be replaced with GnuPG or any alike encryption tool.
-'''
 
-def decrypt(file_path, passphrase):
-    '''Decrypt a Fornet encrypted file.
+def decrypt(file_path: str, passphrase: bytes) -> str:
+    """Decrypt a Fornet encrypted file.
 
     Arguments:
-        file_path (str): The pass to the encrypted file.
+        file_path (str):
+            The pass to the encrypted file.
 
-        passphrase (bytes, str): The passphrase necessary to decrypt 
-                the file.
+        passphrase (bytes, str):
+            The passphrase necessary to decrypt the file.
 
-    return (): TODO
-    '''
+    return (str):
+        The decrypted content of an encrypted file.
+    """
     # Import external modules
     _fernet = __import__('cryptography.fernet', fromlist=['Fernet'])
     Fernet = _fernet.Fernet

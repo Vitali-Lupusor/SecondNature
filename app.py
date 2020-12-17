@@ -1,16 +1,15 @@
-'''
+"""Trigger the application - executable file.
+
+The application is orchstrated by Apache Airflow. This allows for a visual
+interpretation of the success/failure for each step of the pipeline.
+
+IMPORTANT!
+Make sure that once Apache Airflow is installed the "dags_folder" key is set up
+to the top level of this application.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
-
-Description: Executable file - triggers the application.
-    The application is orchstrated by Apache Airflow. This allows 
-    for a visual interpretation of the success/failure for each step 
-    of the pipeline.
-
-    IMPORTANT!
-    Make sure that once Apache Airflow is installed the "dags_folder" key 
-    is set up to the top level of this application.
-'''
+"""
 
 # Import external modules
 from airflow import DAG
@@ -34,7 +33,7 @@ users_meta = config.COLLECTIONS['users']['bq_location']
 
 default_args = {
     'owner': 'secondNature',
-    'start_date': datetime(2020, 5, 31, 15, 00, 00),        # This is based on COMPANY_START_DATE value provided in the README.md file
+    'start_date': datetime(2020, 6, 1, 15, 00, 00),         # This is based on COMPANY_START_DATE value provided in the README.md file
     'email': [],
     'email_on_failure': False,                              # TODO: set up an emil SMTP and change to True
     'email_on_retry': False,
@@ -50,7 +49,7 @@ dag = DAG(
         'Each extract contains 1-day-worth of data.'
     ),
     default_args=default_args,
-    schedule_interval=timedelta(days=1)                       # Scheduled to be triggered daily
+    schedule_interval=timedelta(days=1)                     # Scheduled to be triggered daily
 )
 
 task_extract_table_users = PythonOperator(

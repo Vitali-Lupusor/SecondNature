@@ -1,18 +1,12 @@
-'''
+"""Test the MongoDB table extraction.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: TODO
-'''
 
 def test_extract_table():
-    '''TODO
-
-    Arguments:
-        arg (): TODO
-
-    return (): TODO
-    '''
+    """TODO"""
     # Import internal modules
     from pipelines import users_extract_logic
 
@@ -22,6 +16,7 @@ def test_extract_table():
     )
 
     return result
+
 
 if __name__ == '__main__':
     # Import external modules

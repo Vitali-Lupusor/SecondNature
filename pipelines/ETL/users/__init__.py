@@ -1,9 +1,8 @@
-'''
+"""ETL functions for the Users collection.
+
 Date: 2020-11-21
 Author: Vitali Lupusor
-
-Decription: Initiate the code in the current folder.
-'''
+"""
 
 # Import internal modules
 from .spark import users_ETL as users_pyspark_ETL

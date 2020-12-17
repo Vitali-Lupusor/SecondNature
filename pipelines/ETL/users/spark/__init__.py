@@ -1,10 +1,8 @@
-'''
+"""Initiate the code related to PySpark ETL process of the "users" files.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
-
-Description: Initiate the code related to PySpark ETL process
-        of the "users" files.
-'''
+"""
 
 # Import external modules
 from pyspark.sql import types

@@ -1,9 +1,8 @@
-'''
+"""Collection of Google Cloud Project functions.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
-
-Description: Initiate the code the subfolders of the current directory.
-'''
+"""
 
 # Import internal modules
 from .gcp_credentials import get_credentials

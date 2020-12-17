@@ -1,25 +1,38 @@
-'''
+"""Connect to a MongoDB host.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: Connect to a MongoDB host.
-'''
+# Import standard modules
+from typing import Optional
 
-def mongo_client(host=None, port=27017, **kwargs):
-    '''Connection to a MongoDG host and return an authenticate 
-    client (if authentication required).
+# Import third-party modules
+from pymongo import MongoClient
+
+
+def mongo_client(
+    host: Optional[str] = None,
+    port: int = 27017,
+    **kwargs
+) -> MongoClient:
+    """Connect to a MongoDG host.
+
+    Return an authenticate client, if authentication required.
 
     Arguments:
-        host (str): MongoDB host IP.
-        port (int): Connection port.
-        **kwargs (dict): Optional key-value attributes.
+        host (str):
+            MongoDB host IP.
 
-    return (pymongo.MongoClient): Authenticated client.
-    '''
-    # Import external modules
-    _pymongo = __import__('pymongo', fromlist=['MongoClient'])
-    MongoClient = _pymongo.MongoClient
+        port (int):
+            Connection port.
 
+        **kwargs (dict):
+            Optional key-value attributes.
+
+    return (pymongo.MongoClient):
+        Authenticated client.
+    """
     # Configure the defaul attributes
     host = host or 'localhost'
 

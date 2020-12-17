@@ -1,38 +1,47 @@
-'''
+"""Connect to a MongoDB database and get the collection.
+
+This is a decorator function that will connect to the database, get the
+collection object and apply the appropriate logic (specified in a separate
+function) in order to extract data.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: Connect to a MongoDB database and get the collection.
-        This is a decorator function that will connect to the database, 
-        get the collection object and apply the appropriate logic (specified 
-        in a separate function) in order to extract data.
-'''
 
-def get_collection(database_name, collection_name):
-    '''Take in the file extraction logic and apply it on the collection object 
-    of the specified database.
+def get_collection(database_name: str, collection_name: str):
+    """Extract a MongoDB collection.
+
+    Take in the file extraction logic and apply it on the collection object of
+    the specified database.
 
     Arguments:
-        database_name (str): The name of the database to which to connect.
-        collection_name (str): The name of the collection that will be queried.
+        database_name (str):
+            The name of the database to which to connect.
 
-    return (function): The decorator function.
-    '''
+        collection_name (str):
+            The name of the collection that will be queried.
+
+    return (function):
+        The decorator function.
+    """
+
     def decorator_get_collection(funct):
-        '''Passes the decorated function to globals.
+        """Pass the decorated function to globals.
 
         Arguments:
             funct (function): The function that will be decorated.
 
         return (function): A wrapper function.
-        '''
+        """
         # Import external modules
         _functools = __import__('functools', fromlist=['wraps'])
         wraps = _functools.wraps
 
         @wraps(funct)
         def wrapper_get_collection(*args, **kwargs):
-            '''Wrapper function.
+            """Wrap the target function.
+
             Wraps some logic around the decorated function.
 
             Arguments:
@@ -40,7 +49,7 @@ def get_collection(database_name, collection_name):
                 **kwargs (dict): Key-value attributes of the decorated function.
 
             return (str): The full path to the extracted file.
-            '''
+            """
             # Import external modules
             _datetime = __import__('datetime', fromlist=['datetime', 'timedelta'])
             datetime = _datetime.datetime
@@ -54,7 +63,7 @@ def get_collection(database_name, collection_name):
             # # Import internal modules
             from config import Config
             from pipelines.support_features import validate_date
-            from . import mongo_client
+            from .mongo_connect import mongo_client
 
             # Instantiate the imported objects
             config = Config()
@@ -68,7 +77,7 @@ def get_collection(database_name, collection_name):
             cut_off_date = validate_date(cut_off_date or execution_date)
             start_date = validate_date(start_date) \
                 if start_date \
-                    else validate_date(cut_off_date) - timedelta(days=1)
+                else validate_date(cut_off_date) - timedelta(days=1)
 
             # Connect to database
             client = mongo_client(
@@ -122,5 +131,5 @@ def get_collection(database_name, collection_name):
             return tmp_path
 
         return wrapper_get_collection
-    
+
     return decorator_get_collection

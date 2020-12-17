@@ -1,36 +1,46 @@
-'''
+"""Upload files from local machine to GCS.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: Upload files from local machine to GCS.
-'''
+# Import standard modules
+from typing import Optional
 
-def upload(source, destination, encryption_key=None, keep=False):
-    '''Upload a single file from local machine to a provided GCS 
-    destination.
 
-    If "encryption_key" provided, the file will be encypted with a 
-    "customer-supplied" key. Meaning that even people with access to 
-    "rest" bucket won't be able to take copies of the file.
+def upload(
+    source: str,
+    destination: str,
+    encryption_key: Optional[bytes] = None,
+    keep: bool = False
+) -> None:
+    """Upload a single file from local machine to a provided GCS destination.
+
+    If "encryption_key" provided, the file will be encypted with a
+    "customer-supplied" key. Meaning that even people with access to "rest"
+    bucket won't be able to take copies of the file.
 
     Cleans up after execution, if "keep" is set to False.
 
     Arguments:
-        source (str): The path to the target file.
+        source (str):
+            The path to the target file.
 
-        destination (str): Either provide the FULL GCS path, i.e. 
-                "gs://bucket/prefix/file", or ommit the "gs://bucket/".
-                In the case of a partial path, the bucket name will 
-                default to the one provided in the "./config.py" file.
+        destination (str):
+            Either provide the FULL GCS path, i.e. "gs://bucket/prefix/file",
+            or ommit the "gs://bucket/".
+            In the case of a partial path, the bucket name will default to the
+            one provided in the "./config.py" file.
 
-        encryption_key (bytes): 32-bit encrytption key.
+        encryption_key (bytes):
+            32-bit encrytption key.
 
-        keep (bool): Flag specifying whether to keep the file after 
-                the upload or delete it. Defaults to False - delete 
-                the file.
+        keep (bool):
+            Flag specifying whether to keep the file after the upload or delete
+            it. Defaults to False - delete the file.
 
     return (NoneType): No return.
-    '''
+    """
     # Import external modules
     _os = __import__('os', fromlist=['path', 'remove'])
     path = _os.path
@@ -83,7 +93,7 @@ def upload(source, destination, encryption_key=None, keep=False):
     )
     blob = bucket.blob(
         blob_name=blob_name,
-        encryption_key=encryption_key # Currently set to None. For more info read comments in ./config.py -> ENCRYPTION_KEY
+        encryption_key=encryption_key   # Currently set to None. For more info read comments in ./config.py -> ENCRYPTION_KEY
     )
 
     with open(source, 'rb') as file_obj:

@@ -1,22 +1,25 @@
-'''
+"""ETL process.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: ETL process 
-'''
 
-def users_ETL(source, **spark_config):
-    '''Flatten the feeds from "users" collection and output disk.
+def users_ETL(source: str, **spark_config) -> str:
+    """Flatten the feeds from "users" collection and output disk.
+
     Also, converts the date fields to DateType.
 
     Arguments:
-        source (str): The full or relative path to the file.
-        **spark_config (dict): Spark configuration settings key-value 
-                attributes.
+        source (str):
+            The full or relative path to the file.
 
-    return (str): The full path (file name included) where the file 
-            is outputed to.
-    '''
+        **spark_config (dict):
+            Spark configuration settings key-value attributes.
+
+    return (str):
+        The full path (file name included) where the file is outputed to.
+    """
     # Import external modules
     _os = __import__('os', fromlist=[
         'path', 'getenv', 'listdir', 'makedirs', 'rename'
@@ -28,7 +31,7 @@ def users_ETL(source, **spark_config):
     rename = _os.rename
     _re = __import__('re', fromlist=['search', 'IGNORECASE'])
     search = _re.search
-    IGNORECASE =_re.IGNORECASE
+    IGNORECASE = _re.IGNORECASE
     _functions = __import__(
         'pyspark.sql.functions', fromlist=['col', 'from_unixtime']
     )
@@ -53,7 +56,7 @@ def users_ETL(source, **spark_config):
         makedirs(output_dir)
 
     # Build the spark application object
-    spark = build_spark(tuple(spark_config.items()))
+    spark = build_spark(**spark_config)
 
     # Read in the data
     users = spark.read \
@@ -63,7 +66,7 @@ def users_ETL(source, **spark_config):
         .load()
 
     # Unnest (unwind) the field
-    users =  users.select([
+    users = users.select([
         col('_id.$oid').alias('id'),
         'age',
         'country',
@@ -75,8 +78,8 @@ def users_ETL(source, **spark_config):
         'postCode',
         col('signUpDate.$date').alias('signUpDate'),
         *[
-            col(f'subscriptions.{column}').alias(f'subscription_{column}') \
-                for column in users.select('subscriptions.*').columns
+            col(f'subscriptions.{column}').alias(f'subscription_{column}')
+            for column in users.select('subscriptions.*').columns
         ]
     ])
     users = users.select([
@@ -92,12 +95,12 @@ def users_ETL(source, **spark_config):
         'signUpDate',
         col('subscription__id.$oid').alias('subscription_id'),
         *[
-            col(f'subscription_invoices.{column}').alias(f'invoice_{column}') \
-                for column in users.select('subscription_invoices.*').columns
+            col(f'subscription_invoices.{column}').alias(f'invoice_{column}')
+            for column in users.select('subscription_invoices.*').columns
         ],
         *[
-            col(f'subscription_planType.{column}').alias(f'planType_{column}') \
-                for column in users.select('subscription_planType.*').columns
+            col(f'subscription_planType.{column}').alias(f'planType_{column}')
+            for column in users.select('subscription_planType.*').columns
         ],
         col('subscription_startDate.$date').alias('subscription_startDate'),
         col('subscription_subscriptionID.$oid').alias('subscriptionID')
@@ -118,8 +121,8 @@ def users_ETL(source, **spark_config):
         'invoice_amount',
         'invoice_currency',
         *[
-            col(f'invoice_info.{column}').alias(f'invoice_{column}') \
-                for column in users.select('invoice_info.*').columns
+            col(f'invoice_info.{column}').alias(f'invoice_{column}')
+            for column in users.select('invoice_info.*').columns
         ],
         col('planType__id.$oid').alias('planType_id'),
         'planType_currency',
@@ -184,8 +187,8 @@ def users_ETL(source, **spark_config):
 
     # Rename
     tmp_filename = next(
-        file for file in listdir(output_dir) \
-            if search(r'part.*\.csv$', file, IGNORECASE)
+        file for file in listdir(output_dir)
+        if search(r'part.*\.csv$', file, IGNORECASE)
     )
     tmp_file_path = path.join(
         output_dir, tmp_filename

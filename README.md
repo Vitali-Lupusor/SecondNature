@@ -1,86 +1,56 @@
-# The challenge
+# Second Nature
+Practical test by Vitali Lupusor
 
-Thank you for your interest in joining Second Nature! Before inviting you to a technical interview we would like to ask you to complete the challenge below:
+## Overview
+The application will extract collections from a MongoDB database based on a partitioning criteria. Then, the extract is flattened and the output saved locally. This triggers two concurrent task:  
+  - upload the initial extract to a Google Cloud Storage bucket (Data Lake)  
+  - upload the flattened file to a BigQuery table.   
+ 
+The application is set up as a batch job that is scheduled to run daily at 00:00. With the commands listed below, we will trigger the app to backfill the tables starting with 2020-06-01 (COMPANY_START_DATE) and 2020-06-10 as end date.  
+The end date is chosen close to start date in order to reduce the amount of time the app will be running, but it can be increased up to current date, in which case the app will update the BigQuery tables with data that was generated between start date and current date - 1 day (if today is 2020-11-22, cut off date 2020-11-21 23:59:59).  
 
-> _Up until now company focus has been on making our app world class and therefore the technologies on the backend that go into making that happen, OLTPs etc. But now, as we start to grow rapidly, data and analytics is becoming an increasingly important way for us to distinguish ourselves from competitors. With that in mind, we have started to migrate data from our operational systems (MongoDB) to analytics ones, however this process is not complete._
->
-> _We are currently looking at how to move data between operational and analytics environments and what those environments should look like, and this is where we'd like your help! We have a MongoDB database that contains three basic collections:_
->
-> 1. _Users (which includes)_
->    1. _Subscriptions_
->    2. _Invoices_
->    3. _Plans_
-> 2. _Groups_
-> 3. _Messages_
->
-> _and we want to get this data out of Mongo DB and into a SQL-like environment with a dashboarding tool on top of it. We want to transform the data into flat tables to allow our wider team to use basic SQL queries to analyse the data. Users are signing up and added to groups all the time plus sending messages in the group chat._
+There is an actual Google Gloud Platofrm project set up for this application, so when the commands are executed real actions take place.  
+The credentials for the account are encrypted with Fernet cryptography, the key to which is going to be sent in a separate email. No actions to decryp the credentials are required as everything is fully automated. The set credentials will expire on 2020-12-01.  
 
-## What we would like from you:
+The application has a centralised configuration file `./config.py` where you can amend the current settings.
 
-- Create an pipeline that takes data from the Mongo DB instance and exports it to a SQL database of your choice in an environment of your choice
-- Your ETL code should be tested in some form
-- You should provide a way to test data robustness of the ETL pipeline
-- **Bonus1**: Add a UI dashboard on top of this that allows you to answer the following questions:
-  - How many users signed up today/this week/this month/ broken down across region, age and gender
-  - What proportion of our total userbase is on subscription A vs B.
-  - How many messages on average are sent per user and per group per week
-- **Bonus2**: you can visualise the success/failure rate of your pipelines
-
-You may use whatever langauage and technologies you like as long as you can explain easily how to run them.
-
-Please fork the repository [here](https://github.com/boz-sn/secondnature-data-challenge) to your own GitHub account. The updated code should then be submitted to your GitHub account and sent through to us for review (add @boz-sn and @danieloj to your repo). We would suggest allocating 3-4 hours to complete the challenge and writing code that you'd be happy to send for code review at your current company. We would expect this to be completed within 1 week of receiving the challenge, if you require longer, please let us know.
-
-We understand that the entire task may not be completeable in 3-4 hours, so please get as far as possible and then summarise in your readme what you'd still like to be completed, and any thoughts you had about challenges or next steps.
-
-Let me know if you have any questions, I'd be happy to help.
-
-Good luck!
-
-Boz
-
-# How to Run
+## How to Run
 
 1. Install Docker from `https://docs.docker.com/get-docker/`
 2. Run `npm install` from top level of the repository
 3. Run `docker-compose up --build` from top level of the repository
-4. Run `docker-compose down` from top level of the repository to stop all services
+4. Allow docker to run for a few minutes in order to generate enough fake data. In the meanwhile proceed with the below.
+5. Run `docker-compose down` from top level of the repository to stop all services
+6. Create a new environement with tools like conda or pyenv or virtualenv.
+7. Actiave the environment and run `pip install -r requirement.txt`.
+    - Note: not all libraries in the `./requirements.txt` file are mandatory, as didn't have time to filter out the unnecessary ones.
+8. Install Spark.  
+    - Run `curl --silent -O https://downloads.apache.org/spark/spark-3.0.1/spark-3.0.1-bin-hadoop3.2.tgz`
+    - To unpack the archive run `tar xvf spark-3.0.1-bin-hadoop3.2.tgz`
+    - Set up the environment variables `export SPARK_HOME={PATH TO WHERE YOU UNPACTED THE SPARK ARCHIVE}/spark-3.0.1-bin-hadoop3.2 && export PYSPARK_PYTHON={PYTHON 3 INTERPRETER TO RUN SPARK} && export JAVA_HOME={PATH TO JAVA 11}`
+9. Install Apache Airflow `https://airflow.apache.org/docs/stable/start.html`.
+10. In `~/airflow/airflow.cfg` change the value of `dags_folder` to the top level of this application.
+11. Check your email for the decryption passphrase and impliment one of the below options:
+    - Inside `./config.py` replace the `PASSPHRASE` value with the phrase from the email.
+    - In the shell you will execute the application from run `export PASSPHRASE='REPLACE ME WITH THE PASSPHRASE FROM THE EMAIL'`
+12. Run `airflow backfill data_migration -s 2020-06-01 -e 2020-06-10`.  
+    - This will trigger the app.
+13. In order to visualise every step of the application, head over to `localhost:8080`
+    - Given than you have run `airflow webserver -p 8080`
+14. (Optional) If you want to see the data from the BigQuery table that you just populated, run `python ./query_bq.py`.
 
-## Notes
-
-The docker compose file spins up 3 services, only 2 of which are critical, the third more for support if needed.
-
-1. `mongo` - this is the container running the mongoDB instance
-2. `fake-data` - this is the service that creates fake users, messages and groups
-3. `mongo-express` - a UI for inspecting the data in the mongoDB database (you can access this at `localhost:8081`
-
-All 3 services are on the same docker network and expose ports as defined in the `docker-compose.yml` file
-
-The mongoDB instance running within the `mongo` container is exposed via port `27107` which means you can connect to the DB from your **host machine** as you would to a mongoDB instance running on your host machine. In other words using the below at the command line (authentication details provided)
-
-`mongo -u root -p example --authenticationDatabase admin secondNature`
-
-If you add more services via docker-compose, you can connect to the DB from other containers within the network using the container alias `mongo` as the host - i.e. using the details below
-
-```
-host: mongo
-port: 27017
-user: root
-password: example
-authenticationDatabase: admin
-database: secondNature
-```
-
-### A note on the fake data creation
-
-The `fake-data` service automatically 'signs up' new users, adds subscriptions to the user, creates groups and adds messages to users. The addition of this data is done in 'sped-up' time, i.e. 10 seconds in the real world will represents several days in the sped-up time. The exact speed is defined by the environment variables below
-
-### Environment variables
-
-Several environment variables are defined for the `fake-data` service within the `docker-compose.yml` file, that you may want to adjust, although the defautls should be acceptable. (Predominantly they only change how realistic numbers are for analysis)
-
-| Variable Name                | Type                       | Description                                                              | Default      |
-| ---------------------------- | -------------------------- | ------------------------------------------------------------------------ | ------------ |
-| USER_SIGN_UPS_PER_SCALED_DAY | int                        | Number of users who sign up per day in sped-up time                      | 10           |
-| REAL_TIME_SECONDS_IN_A_DAY   | int                        | Number of seconds in real time that corresponds to a day in sped-up time | 20           |
-| TIME_BETWEEN_CRON_JOBS       | int                        | Time between jobs to add messages and invoices                           | 20           |
-| COMPANY_START_DATE           | date string - 'YYYY-MM-DD' | The date you want users to start signing up from                         | '2020-06-01' |
+## Futere improvements
+1. Create a Dockerfile to easily install all the dependencies
+2. Due to time restrictions I was not able to engineer all the collections (only users is working), so a natural next step is to develop the logic for the rest of them.
+3. Create a dashboard to visualise insights based on the created pipelines.
+4. Add logs for an easier debugging.
+5. Add unit tests for a smooth CI/CD.
+6. Improve the security aspect:
+    - Hide sensite information in a vault (example Google Secret Manager)
+    - Use a better encryption mechanism (example GnuPG)
+    - Use `customer-supplie` encryption key for an elivated security
+7. Set up an SMTP to send email notification on the status if the tasks.
+8. Comment the code in a more explicit manner.
+9. Push the ETL of the extracts to the cloud.
+    - Create a docker image with a tailored code and set it up on a service like to Google Cloud App Engine or Kubernetes.
+    - Make it event driven as opposed to scheduled task.

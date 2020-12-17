@@ -1,20 +1,17 @@
-'''
+"""Test the connectivity feature.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: TODO
-'''
+# Import third-party modules
+from pymongo import MongoClient
 
-def test_connection():
-    '''TODO
 
-    Arguments:
-        arg (): TODO
-
-    return (): TODO
-    '''
+def test_connection() -> MongoClient:
+    """TODO"""
     # Import internal modules
-    from pipelines.support_features import mongo_client
+    from pipelines.mongodb.mongo_connect import mongo_client
     from config import Config
 
     config = Config()
@@ -25,6 +22,7 @@ def test_connection():
     )
 
     return client
+
 
 if __name__ == '__main__':
     try:
@@ -37,4 +35,3 @@ if __name__ == '__main__':
         )
     else:
         print('Connection test passed!')
-

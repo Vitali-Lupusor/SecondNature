@@ -1,17 +1,19 @@
-'''
+"""Pipeline configuration file.
+
+Currently only the "users" pipeline is set up, but the other ones are
+easy to be developed as most of the code is reusable.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: Pipeline configuration file.
-        Currently only the "users" pipeline is set up, but the other ones 
-        are easy to be developed as most of the code is reusable.
-'''
 
 class Config:
-    '''Configuration class - the centralised configuration object.
+    """Configuration class - the centralised configuration object.
 
     All pipeline configurations should be defined here.
-    '''
+    """
+
     # Import external modules
     _os = __import__('os', fromlist=['getenv'])
     getenv = _os.getenv
@@ -45,7 +47,7 @@ class Config:
     CREDENTIALS = 'credentials/encypted_service_account.txt'
     PASSPHRASE = getenv('PASSPHRASE')                               # TODO: Check your email for the passphrase value.
     ENCRYPTION_KEY = getenv('GCS_ENRYPTION_KEY')                    # This will use "customer-supplied" encryption for files in GCS.
-                                                                    # It means that even people with access to the bucket won't be able take 
+                                                                    # It means that even people with access to the bucket won't be able take
                                                                     # copies, if they don't have this key.
 
     # Operation Variables

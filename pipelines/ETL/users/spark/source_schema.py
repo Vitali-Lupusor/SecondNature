@@ -1,21 +1,20 @@
-'''
+"""Build PySpark Schema object for the extracted "users" collection.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
+"""
 
-Description: Pyspark Schema object for the extracted "users" collection.
-'''
 
 def users_source_schema(types):
-    '''Build the PySpark schema for the "users" collection feeds as they 
-    come out of MongoDB.
+    """Build the PySpark schema for the "users" collection feeds.
 
     Arguemnts:
-        types (pyspark.sql.types): PySpark object containing all available 
-                data types.
+        types (pyspark.sql.types):
+            PySpark object containing all available data types.
 
-    return (pyspark.sql.types.StructType): PySpark schema object for the 
-        "users" collection feeds.
-    '''
+    return (pyspark.sql.types.StructType):
+        PySpark schema object for the "users" collection feeds.
+    """
     schema = types.StructType(
         (
             types.StructField(

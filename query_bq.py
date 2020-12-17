@@ -1,25 +1,32 @@
-'''
+"""Show top N rows of a selected table.
+
+This is provided in order prove that the pipelines are populating real BigQuery
+tables.
+
 Date: 2020-11-22
 Author: Vitali Lupusor
+"""
 
-Description: This is provided in order prove that the pipelines 
-        are populating real BigQuery tables.
-'''
 
-def query(project, dataset, table, limit=50):
-    '''Query a BigQuery table.
+def query(project: str, dataset: str, table: str, limit: int = 50) -> None:
+    """Query a BigQuery table.
 
     Arguments:
-        project (str): The name of the project where the desired table is.
+        project (str):
+            The name of the project where the desired table is.
 
-        dataset (str): The name of the BigQuery dataset where the table is.
+        dataset (str):
+            The name of the BigQuery dataset where the table is.
 
-        table (str): The name of the table to query.
+        table (str):
+            The name of the table to query.
 
-        limit (int): How many rows to return.
+        limit (int):
+            How many rows to return.
 
-    return (str): The output of the query
-    '''
+    return (str):
+        The output of the query
+    """
     # Import internal modules
     from pipelines.GCP import get_client
 
@@ -40,6 +47,7 @@ def query(project, dataset, table, limit=50):
     dataframe.to_csv('./query_result.txt', index=False)
 
     return 'Check file `./query_result.txt`'
+
 
 if __name__ == '__main__':
     # Import external modules

@@ -1,23 +1,30 @@
-'''
+"""Build the schema of the BigQuery "users" master table.
+
 Date: 2020-11-22
 Author: Vitali Lupusor
+"""
 
-Description: The schema of the BigQuery "users" master table.
-'''
+# Import standard modules
+from typing import List
 
-def users_destination_schema(SchemaField):
-    '''Build BigQuery schema for the "users" feeds.
+# Import third-party modules
+from google.cloud.bigquery import SchemaField
 
-    The below Nones can be replaced with field descriptions. 
-    This helps with a better understanding of the field for the 
-    person looking at the table and acts as a sort of data dictionary.
+
+def _users_destination_schema(SchemaField: SchemaField) -> List[SchemaField]:
+    """Build BigQuery schema for the "users" feeds.
+
+    The below Nones can be replaced with field descriptions.
+    This helps with a better understanding of the field for the person looking
+    at the table and acts as a sort of data dictionary.
 
     Arguemnts:
-        SchemaField (google.cloud.bigquery.SchemaField): BigQuery 
-                schema object.
+        SchemaField (google.cloud.bigquery.SchemaField):
+            BigQuery schema object.
 
-    return (list): BigQuery schema for the "users" master table.
-    '''
+    return (List[google.cloud.bigquery.SchemaField]):
+        BigQuery schema for the "users" master table.
+    """
     schema = [
         SchemaField('id', 'STRING', 'NULLABLE', None, ()),
         SchemaField('age', 'INTEGER', 'NULLABLE', None, ()),

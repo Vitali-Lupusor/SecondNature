@@ -1,9 +1,8 @@
-'''
+"""Import various support functions from across the application.
+
 Date: 2020-11-14
 Author: Vitali Lupusor
-
-Description: Initiate the code from subfolders.
-'''
+"""
 
 # Import internal modules
 from .mongodb import users_extract_logic

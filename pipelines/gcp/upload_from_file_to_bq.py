@@ -1,68 +1,89 @@
-'''
+"""Upload a file from the local machine into a BigQuery talbe.
+
+If the table does not exist, it is being created.
+
 Date: 2020-11-21
 Author: Vitali Lupusor
+"""
 
-Description: Upload a file from the local machine into a BigQuery talbe.
-        If the table does not exist, it is being created.
-'''
+# Import standard modules
+from typing import Any, List, Optional
+
+# Import third-party modules
+from google.cloud import bigquery
+
 
 def from_file_to_bq(
-    source, destination, schema=None, mode=None, header_rows=1,
-    partitioning_field=None, partitioning_type=None,
-    partitioning_freq=None, clustering_fields=None
-):
-    '''Load a files from the local machine into BigQuery.
+    source: str,
+    destination: str,
+    schema: Optional[List[bigquery.SchemaField]] = None,
+    mode: Optional[str] = None,
+    header_rows: int = 1,
+    partitioning_field: Optional[str] = None,
+    partitioning_type: Optional[str] = None,
+    partitioning_freq: Any = None,
+    clustering_fields: Optional[List[str]] = None
+) -> None:
+    """Load a files from the local machine into BigQuery.
+
     The job will wait until the upload is completed.
 
     Arguments:
-        source (str): The full path to the source file.
+        source (str):
+            The full path to the source file.
 
-        destination (str): The path to the destination table in format 
-                "project.dataset.table".
+        destination (str):
+            The path to destination table in format "project.dataset.table".
 
-        schema (google.cloud.bigquery.SchemaType): Schema of the dstination table.
+        schema (google.cloud.bigquery.SchemaType):
+            Schema of the dstination table.
 
-        mode (str, NoneType): Table's write disposition. Possible values: 
-                ['empty', 'append', 'overwrite']. If not specified, defaults 
-                to 'empty'.
+        mode (str, NoneType):
+            Table's write disposition. Possible values:
+            ['empty', 'append', 'overwrite']. If not specified, defaults
+            to 'empty'.
 
-        header_rows (int): The number of rows that make up the header. 
-                Defaults to 1. This is being ignored, if the source file format is 
-                anything other than CSV.
+        header_rows (int):
+            The number of rows that make up the header.
+            Defaults to 1. This is being ignored, if the source file format is
+            anything other than CSV.
 
-        partitioning_field (str): The name of the field by with to partition the table.
-                Defaults to None.
+        partitioning_field (str):
+            The name of the field by with to partition the table.
+            Defaults to None.
 
-                IMPORTANT!
-                The field should be at the highest level of schema hierarchy; and can 
-                be only of 'DATE', 'DATETIME', 'TIMESTAMP' or 'INTEGER' types.
+            IMPORTANT!
+            The field should be at the highest level of schema hierarchy; and
+            can be only of 'DATE', 'DATETIME', 'TIMESTAMP' or 'INTEGER' types.
 
-        partitioning_type (str): Specify whether it is a time or range partitioning. 
-                Available options are ['time', 'range']. Defaults to None.
+        partitioning_type (str):
+            Specify whether it is a time or range partitioning.
+            Available options are ['time', 'range']. Defaults to None.
 
-        partitioning_freq (any): If it is a time partitioning, then the options are: 
-                ['day', 'hour']. Currently only "day" is supported. Defaults to None.
+        partitioning_freq (any):
+            If it's a time partitioning, then the options are: ['day', 'hour'].
+            Currently only "day" is supported. Defaults to None.
 
-                IMPORTANT!
-                If tge partitioning type is range, the value should be a dictionary 
-                with the following mandatory fileds: {'start', 'end', 'interval'}!
+            IMPORTANT!
+            If tge partitioning type is range, the value should be a dictionary
+            with the following mandatory fileds: {'start', 'end', 'interval'}!
 
-        clustering_fields (list): The list of field by with to cluster the table. 
-                The order in which the field as listed is important. For performance 
-                optimisation order the field based on the most "popular" column first.
-                Defaults to None.
+        clustering_fields (list):
+            The list of field by with to cluster the table.
+            The order in which the field as listed is important.
+            For performance optimisation order the field based on the most
+            "popular" column first.
+            Defaults to None.
 
-                IMPORTANT!
-                The field can only be of primary data types, i.e. INTEGER, STRING, 
-                etc (no STRUCTs!).
-                As of 2018-06-29, clustering fields cannot be set on a table
-                which does not also have time partioning defined.
+            IMPORTANT!
+            The field can only be of primary data types, i.e. INTEGER, STRING,
+            etc (no STRUCTs!).
+            As of 2018-06-29, clustering fields cannot be set on a table which
+            does not also have time partioning defined.
 
     return (NoneType): No return.
-    '''
-    # Import externla modules
-    _cloud = __import__('google.cloud', fromlist=['bigquery'])
-    bigquery = _cloud.bigquery
+    """
+    # Import standard modules
     _os = __import__('os', fromlist=['path'])
     path = _os.path
 
@@ -76,7 +97,7 @@ def from_file_to_bq(
     source_file_extention = path.splitext(source)[1]
     source_format = 'NEWLINE_DELIMITED_JSON' \
         if source_file_extention[1:].upper() == 'JSON' \
-            else source_file_extention[1:].upper()
+        else source_file_extention[1:].upper()
     if not mode:
         mode = 'WRITE_EMPTY'
     elif mode.lower().strip() == 'overwrite':
@@ -95,7 +116,7 @@ def from_file_to_bq(
     if partitioning_field:
         if not partitioning_freq:
             if partitioning_type.lower() == 'time':
-                partitioning_freq =  'day'
+                partitioning_freq = 'day'
             elif partitioning_type.lower() == 'range':
                 message = (
                     'Please specify the partitioning frequency!\n'
@@ -117,7 +138,7 @@ def from_file_to_bq(
     if source_file_extention.lower() == '.csv':
         job_config.skip_leading_rows = header_rows          # The number of rows the header spreads across
     if schema:
-        job_config.schema = schema                          # Provide table schema
+        job_config.schema = schema                          # Provide table schema
     else:
         job_config.autodetect = True                        # If schema not provided, autodetect it
     job_config.write_disposition = getattr(                 # Table write mode

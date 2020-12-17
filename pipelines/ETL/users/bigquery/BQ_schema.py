@@ -1,19 +1,29 @@
-'''
+"""Build is BigQuery schema, if the "users" feed is not flattened.
+
+IMPORTANT!!!
+This can be ignored. It was created for experimentation purposes.
+
 Date: 2020-11-21
 Author: Vitali Lupusor
+"""
 
-Description: This is BigQuery schema, if the "users" feed is not flattened.
-        This can be ignored. It was created for experimentation purposes.
-'''
+# Import standard modules
+from typing import List
 
-def user_bq_schema(SchemaField):
-    '''Build the BigQuery schema for the "users" collection feeds.
+# Import third-party modules
+from google.cloud.bigquery import SchemaField
+
+
+def user_bq_schema(SchemaField: SchemaField) -> List[SchemaField]:
+    """Build the BigQuery schema for the "users" collection feeds.
 
     Arguments:
-        SchemaField (google.cloud.bigquery.SchemaField): Google schema object.
+        SchemaField (google.cloud.bigquery.SchemaField):
+            Google schema object.
 
-    return (list): List of schema object for each column of the "users" table.
-    '''
+    return (List[google.cloud.bigquery.SchemaField]):
+        List of schema object for each column of the "users" table.
+    """
     schema = [
         SchemaField(
             '_id', 'RECORD', 'NULLABLE', None, (
